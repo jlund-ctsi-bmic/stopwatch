@@ -174,7 +174,7 @@ class StopwatchExternalModule extends AbstractExternalModule {
             $ih->css("css/stopwatch-em.css", $isSurvey);
             $debug = $this->getProjectSetting("debug-js") == true;
             $messages = array(
-                "error_overflow" => $this->tt("error_overflow"),
+                "error_overflow" => $this->tt_mlm("error_overflow"),
             );
             // Transfer data to the JavaScript implementation.
             ?>
@@ -263,7 +263,7 @@ class StopwatchExternalModule extends AbstractExternalModule {
                 }
                 if ($params == null) {
                     $params = array(
-                        "error" => $this->tt("error_invalidjson", $action_tag, $field) // Invalid JSON supplied for {0} action tag of field '{1}'.
+                        "error" => $this->tt_mlm("error_invalidjson", $action_tag, $field) // Invalid JSON supplied for {0} action tag of field '{1}'.
                     );
                 }
                 else {
@@ -306,28 +306,28 @@ class StopwatchExternalModule extends AbstractExternalModule {
     private function validateParams($project, $record, $instrument, $event_id, $instance, $field, $params) {
         // Add defaults.
         if (!isset($params["label_start"])) {
-            $params["label_start"] = $this->tt("label_start"); //= Start 
+            $params["label_start"] = $this->tt_mlm("label_start"); //= Start 
         }
         if (!isset($params["label_resume"])) {
-            $params["label_resume"] = $this->tt("label_resume"); //= Resume
+            $params["label_resume"] = $this->tt_mlm("label_resume"); //= Resume
         }
         if (!isset($params["label_stop"])) {
-            $params["label_stop"] = $this->tt("label_stop"); //= Stop
+            $params["label_stop"] = $this->tt_mlm("label_stop"); //= Stop
         }
         if (!isset($params["label_reset"])) {
-            $params["label_reset"] = $this->tt("label_reset"); //= Reset
+            $params["label_reset"] = $this->tt_mlm("label_reset"); //= Reset
         }
         if (!isset($params["label_lap"])) {
-            $params["label_lap"] = $this->tt("label_lap"); //= Lap
+            $params["label_lap"] = $this->tt_mlm("label_lap"); //= Lap
         }
         if (!isset($params["label_capture"])) {
-            $params["label_capture"] = $this->tt("label_capture"); //= Capture
+            $params["label_capture"] = $this->tt_mlm("label_capture"); //= Capture
         }
         if (!isset($params["label_elapsed"])) {
-            $params["label_elapsed"] = $this->tt("label_laptime"); //= Lap time
+            $params["label_elapsed"] = $this->tt_mlm("label_laptime"); //= Lap time
         }
         if (!isset($params["label_cumulated"])) {
-            $params["label_cumulated"] = $this->tt("label_cumulated"); //= Cumulated
+            $params["label_cumulated"] = $this->tt_mlm("label_cumulated"); //= Cumulated
         }
         if (!isset($params["cumulated"])) {
             $params["cumulated"] = false;
@@ -397,7 +397,7 @@ class StopwatchExternalModule extends AbstractExternalModule {
             $targetField = $params["target"];
             // Valid target?
             if (!$project->areFieldsOnSameForm([$field, $targetField])) {
-                $params["error"] = $this->tt("error_invalidtarget"); //= Invalid target field or @STOPWATCH and target field are not on the same instrument.
+                $params["error"] = $this->tt_mlm("error_invalidtarget"); //= Invalid target field or @STOPWATCH and target field are not on the same instrument.
                 return $params;
             }
             // Validate field metadata.
@@ -444,7 +444,7 @@ class StopwatchExternalModule extends AbstractExternalModule {
                 }
             }
             else {
-                $params["error"] = $this->tt("error_invalidmissingtarget", $this->STOPWATCH); //= Invalid or missing target field. Target field must be of type 'Text Box' and either Integer, Number, or Time (MM:SS) validation and be located on the same instrument as {0}.
+                $params["error"] = $this->tt_mlm("error_invalidmissingtarget", $this->STOPWATCH); //= Invalid or missing target field. Target field must be of type 'Text Box' and either Integer, Number, or Time (MM:SS) validation and be located on the same instrument as {0}.
                 return $params;
             }
         }
@@ -461,7 +461,7 @@ class StopwatchExternalModule extends AbstractExternalModule {
                 $params["only_once"] = false;
             }
             if ($params["only_once"] !== false && empty($params["only_once"])) {
-                $params["error"] = $this->tt("error_onlyonce"); //= Invalid value for 'only_once'.
+                $params["error"] = $this->tt_mlm("error_onlyonce"); //= Invalid value for 'only_once'.
                 return $params;
             }
             $params["at_top"] = isset($params["at_top"]) ? ($params["at_top"] == true) : true;
@@ -472,14 +472,14 @@ class StopwatchExternalModule extends AbstractExternalModule {
             // JSON.
             if ($params["store_format"] == "json") {
                 if (!($project->getFieldType($params["target"]) == "textarea" || ($project->getFieldType($params["target"]) == "text" && $project->getFieldValidation($params["target"]) == null))) {
-                    $params["error"] = $this->tt("error_invalidtargetjson"); //= Invalid target field type. Target must be of type 'Text Box' (without validation) or 'Notes Box'.
+                    $params["error"] = $this->tt_mlm("error_invalidtargetjson"); //= Invalid target field type. Target must be of type 'Text Box' (without validation) or 'Notes Box'.
                     return $params;
                 }
             } 
             // Repeating form.
             else {
                 if ($project->getFieldType($params["target"]) != "text" || $project->getFieldValidation($params["target"]) !== null) {
-                    $params["error"] = $this->tt("error_invalidtargettext"); //= Target field type must be of type 'Text Box' without validation.
+                    $params["error"] = $this->tt_mlm("error_invalidtargettext"); //= Target field type must be of type 'Text Box' without validation.
                     return $params;
                 }
                 $repeating_field_names = array("elapsed", "start", "stop", "index");
@@ -499,16 +499,16 @@ class StopwatchExternalModule extends AbstractExternalModule {
                     }
                 }
                 if (!count($repeating_fields) || !array_key_exists("elapsed", $repeating_fields)) {
-                    $params["error"] = $this->tt("error_nomapping"); //= Storage field mappings must be provided.
+                    $params["error"] = $this->tt_mlm("error_nomapping"); //= Storage field mappings must be provided.
                     return $params;
                 }
                 if (!isset($params["event"])) $params["event"] = $event_id;
                 if ($project->getEventId($params["event"]) == null) {
-                    $params["error"] = $this->tt("error_invalidevent"); //= Invalid event.
+                    $params["error"] = $this->tt_mlm("error_invalidevent"); //= Invalid event.
                     return $params;
                 }
                 if (!$project->areFieldsOnSameForm(array_values($repeating_fields)) || !$project->isFieldOnRepeatingForm($repeating_fields[array_key_first($repeating_fields)], $params["event"])) {
-                    $params["error"] = $this->tt("error_invalidmappping"); //= Invalid field mappings. All fields must exist and be on the same repeating form.
+                    $params["error"] = $this->tt_mlm("error_invalidmappping"); //= Invalid field mappings. All fields must exist and be on the same repeating form.
                     return $params;
                 }
                 $allowedType = array(
@@ -539,18 +539,18 @@ class StopwatchExternalModule extends AbstractExternalModule {
                 );
                 foreach ($repeating_fields as $map_name => $target_name) {
                     if ($project->getFieldType($target_name) != "text") {
-                        $params["error"] = $this->tt("error_mappingtext", $target_name); //= Mapping field '{0}' must be of type 'Text Box'.
+                        $params["error"] = $this->tt_mlm("error_mappingtext", $target_name); //= Mapping field '{0}' must be of type 'Text Box'.
                         return $params;
                     }
                     $validation_type = $project->getFieldValidation($target_name);
                     if (!in_array($validation_type, $allowedType[$map_name], true)) {
-                        $params["error"] = $this->tt("error_mappinginvalidtype", $target_name); //= Mapped field '{0}' has an invalid type.
+                        $params["error"] = $this->tt_mlm("error_mappinginvalidtype", $target_name); //= Mapped field '{0}' has an invalid type.
                         return $params;
                     }
                 }
                 $params["form"] = $project->getFormByField($repeating_fields[array_key_first($repeating_fields)]);
                 if (!$project->isFormOnEvent($params["form"], $params["event"])) {
-                    $params["error"] = $this->tt("error_formeventmismatch", $params["form"], $params["event"]); //= Form '{0}' is not on event '{1}'.
+                    $params["error"] = $this->tt_mlm("error_formeventmismatch", $params["form"], $params["event"]); //= Form '{0}' is not on event '{1}'.
                     return $params;
                 }
             }

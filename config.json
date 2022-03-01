@@ -10,7 +10,7 @@
     "documentation": "README.md",
     "tt_documentation": "module_docs",
 
-    "framework-version": 3,
+    "framework-version": 10,
 
     "authors": [
         {
